@@ -15,5 +15,6 @@ var svg = d3
   .select("#scatter")
   .append("svg")
   .attr("width", width)
-  .attr("height", height)
-  .attr("class", "chart");
+  .attr("height", height);
+
+var chart = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
