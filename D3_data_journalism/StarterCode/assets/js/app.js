@@ -21,3 +21,14 @@ var chart = svg.append("g").attr("transform", `translate(${margin.left}, ${margi
 
 // Add in tooltip through a div in the body
 d3.select(".chart").append("div").attr("class", "tooltip").style("opacity", 0);
+
+// Call in CSV
+d3.csv("data/data.csv", function(err, CSVdata) {
+    // Remove errors
+    if (err) throw err;
+    // Parse data
+    CSVdata.forEach(function(data) {
+        data.income += data.income;
+        data.obesity += data.obesity;
+    });
+});
