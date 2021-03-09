@@ -18,3 +18,6 @@ var svg = d3
   .attr("height", height);
 
 var chart = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+// Add in tooltip through a div in the body
+d3.select(".chart").append("div").attr("class", "tooltip").style("opacity", 0);
