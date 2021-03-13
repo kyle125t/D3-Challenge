@@ -31,4 +31,44 @@ d3.csv("data/data.csv", function(err, CSVdata) {
         data.income += data.income;
         data.obesity += data.obesity;
     });
+    // Create scales
+    var xLinearScale = d3.scaleLinear().range([0, width]);
+    var yLinearScale = d3.scaleLinear().range([height, 0]);
+    // Use scales in creation of axes
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+    // Set blank variables
+    var xMin;
+    var xMax;
+    var yMin;
+    var yMax;
+    // Define min/max for axes
+    xMin = d3.min(CSVdata, function(data) {
+        return +data.income * 0.95;
+    });;
+    xMax = d3.max(CSVdata, function(data) {
+        return +data.income * 1.05;
+    });;
+    yMin = d3.min(CSVdata, function(data) {
+        return +data.obesity * 0.95;
+    });;
+    yMax = d3.max(CSVdata, function(data) {
+        return +data.obesity *1.05;
+    });;
+    // Set linear scales
+    xLinearScale.domain([xMin, xMax]);
+    yLinearScale.domain([yMin, yMax]);
+    // Tooltip
+    var toolTip = d3
+    .tip()
+    .attr("class", "tooltip")
+    .offset([80, -60])
+    .html(function(data) {
+        var stateName = data.state;
+        var income = +data.income;
+        var obesity = +data.obesity;
+        return (
+            stateName + '<br> Income: ' + income + '% <br> Obesity: ' + obesity +'%'
+        );
+    });
 });
