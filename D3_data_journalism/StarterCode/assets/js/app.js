@@ -67,8 +67,27 @@ d3.csv("data/data.csv", function(err, CSVdata) {
         var stateName = data.state;
         var income = +data.income;
         var obesity = +data.obesity;
-        return (
-            stateName + '<br> Income: ' + income + '% <br> Obesity: ' + obesity +'%'
-        );
+        return (stateName + "<br> Income: " + income + "% <br> Obesity: " + obesity + "%");
+    });
+    // Append axes
+    chart.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(bottomAxis);
+    chart.append("g")
+      .call(leftAxis);
+    chart.call(toolTip);
+    // Create circles
+    var circlesGroup = chart.selectAll("circle")
+      .data(CSVdata)
+      .enter()
+      .append("circle")
+      .attr("cx", d => xLinearScale(data.income +0.5))
+      .attr("cy", d => yLinearScale(data.obesity +0.5))
+      .attr("r", "12")
+      .attr("fill", "blue")
+      .attr("opacity", .5)
+
+    .on("mouseout", function(data, index) {
+      toolTip.hide(data);
     });
 });
