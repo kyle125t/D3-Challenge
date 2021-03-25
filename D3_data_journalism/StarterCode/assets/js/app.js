@@ -23,7 +23,7 @@ var chart = svg.append("g").attr("transform", `translate(${margin.left}, ${margi
 d3.select(".chart").append("div").attr("class", "tooltip").style("opacity", 0);
 
 // Call in CSV
-d3.csv("data/data.csv", function(err, CSVdata) {
+d3.csv(".data/data.csv", function(err, CSVdata) {
     // Remove errors
     if (err) throw err;
     // Parse data
@@ -58,7 +58,7 @@ d3.csv("data/data.csv", function(err, CSVdata) {
     // Set linear scales
     xLinearScale.domain([xMin, xMax]);
     yLinearScale.domain([yMin, yMax]);
-    // Tooltip
+    // Create tooltip variable
     var toolTip = d3
     .tip()
     .attr("class", "tooltip")
@@ -75,19 +75,27 @@ d3.csv("data/data.csv", function(err, CSVdata) {
       .call(bottomAxis);
     chart.append("g")
       .call(leftAxis);
-    chart.call(toolTip);
     // Create circles
     var circlesGroup = chart.selectAll("circle")
       .data(CSVdata)
       .enter()
       .append("circle")
-      .attr("cx", d => xLinearScale(data.income +0.5))
-      .attr("cy", d => yLinearScale(data.obesity +0.5))
+      .attr("cx", d => xLinearScale(data.income + 0.5))
+      .attr("cy", d => yLinearScale(data.obesity + 0.5))
       .attr("r", "12")
       .attr("fill", "blue")
-      .attr("opacity", .5)
-
-    .on("mouseout", function(data, index) {
-      toolTip.hide(data);
-    });
+      .attr("opacity", 0.5)
+      .on("mouseout", function(data, index) {
+        toolTip.hide(data);
+      });
+    chart.call(toolTip);
+    // click
+    circlesGroup.on("click", function(data) {
+      toolTip.show(data);
+    })
+      // Mouseout event
+      .on("mouseout", function(data, index) {
+        toolTip.hide(data);
+      });
+    
 });
