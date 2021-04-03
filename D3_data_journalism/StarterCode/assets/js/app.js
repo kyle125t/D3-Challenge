@@ -21,8 +21,65 @@ var svg = d3
 svg.append("g").attr("class", "xText");
 var xText = d3.select(".xText")
 
+svg.append("g").attr("class", "yText");
+var yText = d3.select(".yText");
+
+xText
+  .append("text")
+  .attr("y", 26)
+  .attr("data-name", "income")
+  .attr("data-axis", "x")
+  .attr("class", "aText inactive x")
+  .text("Household Income (Median)");
+
+yText
+  .append("text")
+  .attr("y", -26)
+  .attr("data-name", "obesity")
+  .attr("data-axis", "y")
+  .attr("class", "aText active y")
+  .text("Obese (%)");
 
 
+d3.csv("assets/data/data.csv").then(function(data) {
+  visualize(data);
+});
+
+function visualize(data) {
+  // curX, curY
+  var axisX = "income";
+  var axisY = "obesity";
+  var xMin;
+  var xMax;
+  var yMin;
+  var yMax;
+
+  var toolTip = d3
+    .tip()
+    .attr("class", "tooltip")
+    .offset([80, -60])
+    .html(function(data) {
+      var xX;
+      var stateName = "<div>" + data.state + "</div>";
+      var yY = "<div>" + axisY + ": " + data[axisY] + "%</div>";
+      if (axisX === "poverty") {
+        // Grab the x key and a version of the value formatted to show percentage
+        xX = "<div>" + axisX + ": " + data[axisX] + "%</div>";
+      }
+      else {
+        // Otherwise
+        // Grab the x key and a version of the value formatted to include commas after every third digit.
+        xX = "<div>" +
+          axisX +
+          ": " +
+          parseFloat(d[curX]).toLocaleString("en") +
+          "</div>";
+      }
+      // Display what we capture.
+      return theState + theX + theY;
+    });
+  svg.call(toolTip);  
+}
 // var chart = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // // Add in tooltip through a div in the body
