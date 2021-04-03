@@ -1,3 +1,4 @@
+// Canvas attributes
 var margin = 20;
 var width = parseInt(d3.select("#scatter").style("width"));
 var height = width - width / 3.9;
@@ -5,7 +6,7 @@ var labelArea = 110;
 var paddingBottom = 40;
 var paddingLeft = 40;
 
-// Create an SVG wrapper
+// Create svg canvas
 var svg = d3
   .select("#scatter")
   .append("svg")
@@ -13,6 +14,7 @@ var svg = d3
   .attr("height", height)
   .attr("class", "chart");
 
+// Create function for the radius of circle to improve visibility across apps
 var circleRadius;
 function crGet() {
   if (width <= 530) {
@@ -24,6 +26,7 @@ function crGet() {
 }
 crGet();
 
+// Setting x-axis 
 svg.append("g").attr("class", "xText");
 var xText = d3.select(".xText")
 
@@ -39,6 +42,7 @@ function xTextRefresh() {
 }
 xTextRefresh();
 
+// Setting y-axis
 svg.append("g").attr("class", "yText");
 var yText = d3.select(".yText");
 
@@ -53,6 +57,7 @@ function yTextRefresh() {
 }
 yTextRefresh();
 
+// X-axis label appended to xText
 xText
   .append("text")
   .attr("y", 26)
@@ -61,6 +66,7 @@ xText
   .attr("class", "aText active x")
   .text("Household Income (Median, in $USD)");
 
+// y-axis label appended to yText
 yText
   .append("text")
   .attr("y", -26)
@@ -69,19 +75,18 @@ yText
   .attr("class", "aText active y")
   .text("Obese (%)");
 
-
+// Read in data CSV
 d3.csv("assets/data/data.csv").then(function(data) {
   visualize(data);
 });
 
+// Define what will be shown through visualize function
 function visualize(dData) {
+  // Define what data is on each axis
   var axisX = "income";
   var axisY = "obesity";
-  var xMin;
-  var xMax;
-  var yMin;
-  var yMax;
 
+  // 
   var toolTip = d3
     .tip()
     .attr("class", "d3-tip")
@@ -95,6 +100,13 @@ function visualize(dData) {
     });
   svg.call(toolTip);
   
+  // Assign empty min/max values
+  var xMin;
+  var xMax;
+  var yMin;
+  var yMax;
+
+  // Create functions to set values for min/max based off data
   function xMinMax() {
     xMin = d3.min(dData, function(d) {
       return + d.income * 0.9;
@@ -114,6 +126,7 @@ function visualize(dData) {
   xMinMax();
   yMinMax();
 
+  // Create scales
   var xScale = d3
     .scaleLinear()
     .domain([xMin, xMax])
@@ -122,7 +135,8 @@ function visualize(dData) {
     .scaleLinear()
     .domain([yMin, yMax])
     .range([height - margin - labelArea, margin]);
-
+  
+  // Add scales to axes and append axes as groups to svg
   var xAxis = d3.axisBottom(xScale);
   var yAxis = d3.axisLeft(yScale);
 
@@ -139,6 +153,7 @@ function visualize(dData) {
 
   var dataCircles = svg.selectAll("g dataCircles").data(dData).enter();
 
+  // Adding circles to graph, along with their labels
   dataCircles
     .append("circle")
     .attr("cx", function(d) {
@@ -153,11 +168,11 @@ function visualize(dData) {
     })
     .on("mouseover", function(d) {
       toolTip.show(d, this);
-      d3.select(this).style("stroke", "#323232");
+      d3.select(this).style("stroke", "#ffffff");
     })
     .on("mouseout", function(d) {
       toolTip.hide(d);
-      d3.select(this).style("stroke", "#e3e3e3");
+      d3.select(this).style("stroke", "#ffffff");
     });
 
   dataCircles
@@ -175,13 +190,16 @@ function visualize(dData) {
     .attr("class", "stateText")
     .on("mouseover", function(d) {
       toolTip.show(d);
-      d3.select("." + d.abbr).style("stroke", "#323232");
+      d3.select("." + d.abbr).style("stroke", "#ffffff");
     })
     .on("mouseout", function(d) {
       toolTip.hide(d);
-      d3.select("." + d.abbr).style("stroke", "#e3e3e3");
+      d3.select("." + d.abbr).style("stroke", "#ffffff");
     });
 }
+
+
+// Original portion of my code, for reference to my line of thinking
 
 // var svgWidth = 960;
 // var svgHeight = 500;
